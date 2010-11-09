@@ -119,7 +119,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
                 break
 
         else:
-            self.send_error(500)
+            #self.send_error(500)
+            self.send_response(500)
             self.end_headers()
             self.wfile.write('Bad request, should be in the format /UA\n')
 
