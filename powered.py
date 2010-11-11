@@ -20,6 +20,9 @@ config.read((
 PORT = config.getint('powered', 'tcpport')
 DEV = config.get('powered', 'serialport')
 
+SUMMARY_VARS = ['I1', 'I2', 'I3', 'K1', 'K2', 'K3', 'KA', 'KV', 'KW',
+                'P1', 'P2', 'P3', 'Q1', 'Q2', 'Q3', 'QA', 'V1', 'V2', 'V3', 'F']
+
 class PactMeter:
 
     def __init__(self, dev='/dev/ttyS0'):
@@ -102,8 +105,18 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.wfile.write(val)
             self.wfile.write('\n')
 
+	def do_summary():
+	    html_ok()
+            for var in SUMMARY_VARS:
+                meter.writeline(var)
+                ret = meter.readline()
+                val = meter.parse(var, ret)
+                self.wfile.write("%s:%s " % (var, val))
+            self.wfile.write('\n')
+
         dispatches = [
             ('^/$',                do_index),
+            ('^/summary$',         do_summary), 
             ('^/([FRSs])$',        do_meter),
             ('^/(B[AVWvw])$',      do_meter),
             ('^/([IiLPpV][123])$', do_meter),
