@@ -4,7 +4,7 @@ import sys
 import time
 import serial
 import struct
-import datetime
+from datetime import datetime
 
 import urlparse
 import BaseHTTPServer
@@ -48,9 +48,9 @@ class PactMeter:
 
     def parse(self, code, ret):
         fromhex  = lambda x: int(x, 16)
-        fromtime = lambda x: datetime.time(*time.strptime(x, '%H:%M:%S')[3:6])
+        fromtime = lambda x: datetime.strptime(x, '%H:%M:%S').time()
         frompack = lambda x: struct.unpack('<II', x)
-        oddfloat = lambda x, s: float(s + x)
+        oddfloat = lambda x, s: float(x)
 
         parsers = [
           ('F=(\d+\.\d+)',                float),
