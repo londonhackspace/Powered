@@ -23,7 +23,7 @@ DEV = config.get('powered', 'serialport')
 SUMMARY_VARS = ['I1', 'I2', 'I3', 'K1', 'K2', 'K3', 'KA', 'KV', 'KW',
                 'P1', 'P2', 'P3', 'Q1', 'Q2', 'Q3', 'QA', 'V1', 'V2', 'V3', 'F']
 
-class PactMeter:
+class PRIMeter:
 
     def __init__(self, dev='/dev/ttyS0'):
         self.dev = dev
@@ -140,7 +140,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 
-meter = PactMeter(DEV)
+meter = PRIMeter(DEV)
 httpd = BaseHTTPServer.HTTPServer(("", PORT), Handler)
 httpd.serve_forever()
 
