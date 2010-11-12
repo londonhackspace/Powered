@@ -69,11 +69,11 @@ if False:
 
   # Seems to be PDU based
 
-if False:
+if True:
   def ascii(s):
     return ''.join([chr(int(x, 16)) for x in s.split(' ')])
 
-  for x in range(255):
+  for x in range(256):
     open()
     r = testLine(chr(x))
     if r != '%02x 0d' % x:
@@ -143,10 +143,16 @@ if False:
   # ff '\xff'
   # ff '\xff'
   #
-  # All others between 130 and 254 return nothing
+  # All others between 130 and 0xfa return nothing
+  #
+  # fe '\xfe'
+  # fa 0d fb 0d fc 0d fd 0d fe 0d '\xfa\r\xfb\r\xfc\r\xfd\r\xfe\r'
+  #
+  # ff '\xff'
+  # 8c '\x8c'
 
-  # So looks like an ASCII protocol, lines up to 10 chars
-
+  # So looks like an ASCII protocol, lines up to 10 chars,
+  # but with funniness on a few high chars (programming?)
 
 if False:
 
@@ -186,7 +192,7 @@ if False:
 
   print end - start
 
-if True:
+if False:
 
   import time
   open()
