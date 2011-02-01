@@ -164,7 +164,7 @@ if False:
 
   r = getLine('\x83\x01\x23\r') # '\x83\x01\x23' after a delay
   print repr(r)
-  r = getLine('\x83\x01\x23\x34\x56\x78\x9a\r') # '\x83\x01\x23' after a delay
+  r = getLine('\x83\x01\x23\x45\x67\x88\xab\r') # '\x83\x01\x23' after a delay
   print repr(r)
   r = getLine('\x84\r') # ''
   print repr(r)
