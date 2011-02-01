@@ -34,6 +34,8 @@ def getLine(str):
 
   return ''.join(res)
  
+def ascii(s):
+  return ''.join([chr(int(x, 16)) for x in s.split(' ')])
 
 if False:
   open()
@@ -69,10 +71,7 @@ if False:
 
   # Seems to be PDU based
 
-if True:
-  def ascii(s):
-    return ''.join([chr(int(x, 16)) for x in s.split(' ')])
-
+if False:
   for x in range(256):
     open()
     r = testLine(chr(x))
@@ -154,22 +153,39 @@ if True:
   # So looks like an ASCII protocol, lines up to 10 chars,
   # but with funniness on a few high chars (programming?)
 
+  # See documentation on wiki
+
 if False:
 
+  import pdb;pdb.set_trace()
   open()
-  for x in range(0x20, 0x7f):
-    print '%02x' % x
-    for y in range(0x20, 0x7f):
-      for z in range(0x20, 0x7f):
-        t = ''.join(map(chr, [x, y, z, 0x0d]))
-        r = getLine(t)
-        if r != t:
-          print t
-          print r
+  r = getLine('\x82\r') # '\x82\r'
+  print repr(r)
 
+  r = getLine('\x83\x01\x23\r') # '\x83\x01\x23' after a delay
+  print repr(r)
+  r = getLine('\x83\x01\x23\x34\x56\x78\x9a\r') # '\x83\x01\x23' after a delay
+  print repr(r)
+  r = getLine('\x84\r') # ''
+  print repr(r)
+  r = getLine('\x84\x01\x23\r') # '\x84\x01\x23\r'
+  print repr(r)
+  r = getLine('\x84\x01\x23\x45\x67\x89\xab\r') # '\x84\x01\x23\x45'
+  print repr(r)
+  r = getLine('\xfa\x01\x23\x45\x67\x89\xab\xcd\xef\x01\r')
+  print repr(r)
+
+  r = getLine('\xfb\r') # '\xfb'
+  print repr(r)
+  r = getLine('\xfc\r') # '\xfc'
+  print repr(r)
+  r = getLine('\xfd\r') # '\xfd'
+  print repr(r)
+  r = getLine('\xfe\r') # '\xfa\x8c\x05\x0a\x9e\x72\x00\x02\x3f\xe4'
+  print repr(r)
   close()
 
-  # See documentation on wiki
+  # All the multi-bytes probably end in \r
 
 if False:
 
@@ -191,6 +207,11 @@ if False:
   close()
 
   print end - start
+
+if True:
+  open()
+  for i in range(0x0, 0xff):
+    print getLine('X%02X\r' % i)
 
 if False:
 
