@@ -54,6 +54,7 @@ class PRIMeter:
         fromtime = lambda x: datetime.strptime(x, '%H:%M:%S').time()
         frompack = lambda x: struct.unpack('<II', x)
         oddfloat = lambda x, s: float(x)
+        float10  = lambda x: float(x) / 10
 
         parsers = [
           ('F=(\d+\.\d+)',                float),
@@ -73,7 +74,13 @@ class PRIMeter:
             if m:
                 return parser(*m.groups())
 
-        
+    def get(self, code):
+        self.writeline(code)
+        line = self.readline()
+        print 'Meter returned: %s' % line
+        val = self.parse(code, line)
+        return val
+
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
@@ -82,6 +89,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
         return str(self.client_address[0])
 
     def do_GET(self):
+        start = time.time()
+
         self.url = urlparse.urlparse(self.path)
         self.params = urlparse.parse_qs(self.url.query)
 
@@ -98,19 +107,14 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
             html_ok()
             self.wfile.flush()
 
-            meter.writeline(code)
-            ret = meter.readline()
-            print 'Meter returned: %s' % ret
-            val = meter.parse(code, ret)
+            val = meter.get(code)
             self.wfile.write(val)
             self.wfile.write('\n')
 
 	def do_summary():
 	    html_ok()
             for var in SUMMARY_VARS:
-                meter.writeline(var)
-                ret = meter.readline()
-                val = meter.parse(var, ret)
+                val = meter.get(var)
                 self.wfile.write("%s:%s " % (var, val))
             self.wfile.write('\n')
 
@@ -137,7 +141,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write('Bad request, should be in the format /UA\n')
 
-
+        end = time.time()
+        print 'Time taken: %0.3f ms\n' % ((end - start) * 1000)
 
 
 meter = PRIMeter(DEV)
